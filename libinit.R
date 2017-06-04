@@ -13,5 +13,5 @@ init <- function() {
   library("XML")
   library("vkR")
   library("data.table")
-  vkOAuth(6031255, 'friends,groups', 'ttmitry@gmail.com', '5567LITvzlom')
+  vkOAuth(6031255, 'friends,groups', 'l', 'p')
 }
