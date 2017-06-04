@@ -4,53 +4,73 @@ source("myframework.R")
 
 myid <- 181306445
 
+anotherid <- 47122493
+
 init();
 
 sample_group = 457918
 
-smintr = 0
+smintr = 100
 
-
-
-fetchFromNamedList <- function(friend_item)
-{
-  print(friend_item)
-  print("and legth")
-  print(length(friend_item))
-  #return(friend_item)
-}
-
-fromff <- function(ff)
-{
-  for (list in ff)
-  {
-    print(list)
-  }
-}
 
 #Возвращает список с id "фейковых" аккаунтов
 findFakesByTriads <- function(group_id=sample_group, sample_size=100, min_triads=smintr) {
-  #извлекли всех членов группы
   members <- fetchGroupMembers(group_id=group_id, sample_size)
-  #извлекли списки друзей для каждого из членов группы  
   friendlists <- getFriendsFor(members$id)
-  #для каждого из списков посчитали кол-во триад
-  lapply(friendlists, getTriads)
+  #получили список "фейков"
+  member_ids <- names(friendlists)
+
+  fake_list <- sapply(member_ids, function(member_id) checkUserByTriads(member_id, friendlists[[member_id]]))
+  
+  return 
 }
   
 
-getTriads <- function(friendlist)
+checkUserByTriads <- function(member_id, friend_list, min_triads=smintr)
 {
-  #получили список друзей с именем 
-  print(friendlist)
+  #здесь должен прогресс бар тикать
+  cat("checking member ", member_id)
+  #Если число триад в друзьяъ пользователя меньше, чем min_triads 
+  if (getUserTriadsBounded(friend_list) < min_triads)
+  {
+    return(TRUE)
+  }
+  else 
+  {
+    return(FALSE)
+  }
+}
+
+#Находит число триад для каждого пользователя
+getUserTriads <- function(friendlist)
+{
   # извлекли списки друзей для каждого из друзей
   friends_of_friends <- getFriendsFor(friendlist)
   #нашли пересечение каждого списка с friendlist
-  lapply(friends_of_friends, intersect, )
+  triadsCount <- Reduce("+", lapply(lapply(friends_of_friends, intersect, y=friendlist), length))
+  return(triadsCount)
+}
+#Нахождение аппроксимированного числа триад по выборке (для производительности)
+getUserTriadsBounded <- function(friend_list, sample_size=50)
+{
+  l <- length(friend_list)
+  if (l < sample_size)
+  {
+    return(getUserTriads(friend_list[1:l]))
+    
+  }
+  else
+  {
+    triads <- getUserTriads(friend_list[1:sample_size])
+    return (l / sample_size * triads)
+  }
 }
 
 
 
-#Извлекаем всех друзей пользователя
+
+
+
+
 
   

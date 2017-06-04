@@ -1,3 +1,4 @@
+#Функции для обработки профилей пользователей группы
 filterDeactivated <- function(users)
 {
   return(users[rowSums(is.na(users)) > 0,])
@@ -16,18 +17,10 @@ fetchGroupMembers <- function(group_id, sample_size=100)
   return(filteredMembers);
 }
 
-fetchFromNamedList <- function(friend_item)
+fetchNames <- function(user_id, friends_lists)
 {
-  print(friend_item)
-  print("and legth")
-  print(length(friend_item))
-  #return(friend_item)
+  return(friends_lists[[user_id]])
 }
-
-fromff <- function(ff)
-{
-  for (list in ff)
-  {
-    print(list)
-  }
-}
+user_ids <- names(my_ff)
+#sapply(user_ids, fetchNames, friends_lists=my_ff,simplify=FALSE, USE.NAMES = TRUE)
+  

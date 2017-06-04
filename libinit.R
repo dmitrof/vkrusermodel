@@ -1,6 +1,6 @@
 
 init <- function() {
-  
+  #Эти библиотеки должны быть предустановлены
   library("devtools")
   library("plyr")
   library("plyr")
@@ -13,5 +13,6 @@ init <- function() {
   library("XML")
   library("vkR")
   library("data.table")
+  #Подставтье: l - login, p - password
   vkOAuth(6031255, 'friends,groups', 'l', 'p')
 }
