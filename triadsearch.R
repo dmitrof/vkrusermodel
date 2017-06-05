@@ -10,11 +10,15 @@ init();
 
 sample_group_global = 457918
 
-smintr_global = 1500
 
+####################Настраиваемые параметры#################
+#минимальное число триад, при котром пользователь - не бот 
+smintr_global = 1000 #тестовое значение, на самом деле эта величина намного меньше
 
 #размер максимальной выборки друзей для проверки каждого пользователя
 friends_sample_global = 100
+
+#--------------------------------------------------------------#
 
 
 
@@ -26,16 +30,16 @@ findFakesByTriads <- function(group_id=sample_group_global, sample_size=10, min_
   friendlists <- getFriendsFor(members$id)
   #получили список "фейков"
   member_ids <- names(friendlists)
-
+  
   candidates <- sapply(member_ids, function(member_id) checkUserByTriads(member_id, friendlists[[member_id]], min_triads, bounded))
   
   n <- names(candidates)
-  
+  print(candidates)
   #fake_list <- list.filter()
   
-  fake_list <- candidates
+  #fake_list <- names(which(candidates))
   #filtered_fake_list
-  return(fake_list)
+  return(names(which(candidates)))
 }
   
 
@@ -60,8 +64,17 @@ checkUserByTriads <- function(member_id, friend_list, min_triads,
 getUserTriads <- function(friend_list, bounded, friends_sample_size = friends_sample_global)
 {
   # извлекли списки друзей для каждого из друзей
+
+  friends_of_friends <- getFriendsOfFriends(friend_list, bounded, friends_sample_size)
   
-  
+  #нашли пересечение каждого списка с friendlist
+  triadsCount <- Reduce("+", lapply(lapply(friends_of_friends, intersect, y=friend_list), length))
+  return(triadsCount)
+}
+
+
+getFriendsOfFriends <- function(friend_list, bounded, friends_sample_size=friends_sample_global)
+{
   if (bounded)
   {
     l <- length(friend_list)
@@ -80,26 +93,7 @@ getUserTriads <- function(friend_list, bounded, friends_sample_size = friends_sa
     friends_of_friends <- getFriendsFor(friend_list)
   }
   
-  #нашли пересечение каждого списка с friendlist
-  triadsCount <- Reduce("+", lapply(lapply(friends_of_friends, intersect, y=friend_list), length))
-  return(triadsCount)
-}
-
-
-#Нахождение аппроксимированного числа триад по выборке (для производительности)
-getUserTriadsBounded <- function(friend_list, bound=50)
-{
-  l <- length(friend_list)
-  if (l < bound)
-  {
-    return(getUserTriads(friend_list[1:l]))
-    
-  }
-  else
-  {
-    triads <- getUserTriads(friend_list[1:bound])
-    return (l / bound * triads)
-  }
+  return(friends_of_friends)
 }
 
 

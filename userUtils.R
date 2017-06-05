@@ -25,3 +25,10 @@ fetchNames <- function(user_id, friends_lists)
 }
 #sapply(user_ids, fetchNames, friends_lists=my_ff,simplify=FALSE, USE.NAMES = TRUE)
   
+
+getUserFriendList <- function(user_id)
+{
+  friends <- getFriends(user_id, fields='deactivated')
+  friends <- filterDeactivated(friends$items)
+  return(friends$id)
+}
