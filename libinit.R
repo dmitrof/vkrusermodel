@@ -13,6 +13,7 @@ init <- function() {
   library("XML")
   library("vkR")
   library("data.table")
+  library("rlist")
   #Подставтье: l - login, p - password
   vkOAuth(6031255, 'friends,groups', 'l', 'p')
 }

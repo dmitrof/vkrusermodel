@@ -1,4 +1,6 @@
 #Функции для обработки профилей пользователей группы
+
+
 filterDeactivated <- function(users)
 {
   return(users[rowSums(is.na(users)) > 0,])
@@ -21,6 +23,5 @@ fetchNames <- function(user_id, friends_lists)
 {
   return(friends_lists[[user_id]])
 }
-user_ids <- names(my_ff)
 #sapply(user_ids, fetchNames, friends_lists=my_ff,simplify=FALSE, USE.NAMES = TRUE)
   
