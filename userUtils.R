@@ -32,3 +32,27 @@ getUserFriendList <- function(user_id)
   friends <- filterDeactivated(friends$items)
   return(friends$id)
 }
+
+
+getFriendsOfFriends <- function(friend_list, bounded, friends_sample_size=friends_sample_global)
+{
+  if (bounded)
+  {
+    l <- length(friend_list)
+    if (l < friends_sample_size)
+    {
+      friends_of_friends <- getFriendsFor(sample(x=friend_list, size=l, replace=FALSE))
+    }
+    else 
+    {
+      friends_of_friends <- getFriendsFor(sample(x=friend_list, size=friends_sample_size, replace=FALSE))  
+    }
+    
+  }
+  else
+  {
+    friends_of_friends <- getFriendsFor(friend_list)
+  }
+  
+  return(friends_of_friends)
+}
