@@ -1,6 +1,4 @@
 #Функции для обработки профилей пользователей группы
-
-
 filterDeactivated <- function(users)
 {
   return(users[rowSums(is.na(users)) > 0,])

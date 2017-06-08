@@ -12,10 +12,10 @@ sample_group_global = 457918
 ####################Настраиваемые параметры#################
 
 # количество сильных связей у пользователя, который не является фейком
-min_rel_global = 5
+min_rel_global = 1
 
 # количество триад, при которых связь можно считать устойчивой
-rel_factor_global = 300
+rel_factor_global = 1
 #--------------------------------------------------------------#
 
 getFakeRatio <- function(group_id=sample_group_global, sample_size=10, min_triads=smintr_global,
@@ -23,13 +23,13 @@ getFakeRatio <- function(group_id=sample_group_global, sample_size=10, min_triad
 {
   members <- fetchGroupMembers(group_id=group_id, sample_size)
   fakes <- findFakesByRelations(members, sample_size)
-  return (length(fakes) / length(members$id))
+  return (length(fakes) / length(members))
 }
 
 
 #Возвращает список с id "фейковых" аккаунтов
 findFakesByRelations <- function(members, sample_size=10) {
-  friendlists <- getFriendsFor(members$id)
+  friendlists <- getFriendsFor(members)
 
   member_ids <- names(friendlists)
   
