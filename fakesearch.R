@@ -14,23 +14,23 @@ smintr_global = 1000 #тестовое значение, на самом дел�
 friends_sample_global = 100
 
 # количество сильных связей у пользователя, который не является фейком
-min_rel_global = 1
+min_rel_global = 10
 
 # количество триад, при которых связь можно считать устойчивой
-rel_factor_global = 1
+rel_factor_global = 20
 #--------------------------------------------------------------#
 
 getFakeRatio <- function(group_id=sample_group_global, sample_size=10, min_triads=smintr_global,
                          bounded=TRUE)
 {
   members <- fetchGroupMembers(group_id=group_id, sample_size)
-  fakes <- findFakesByRelations(members$id, sample_size)
+  fakes <- findFakesByRelations(members$id)
   return (length(fakes) / length(members$id))
 }
 
 
 #Возвращает список с id "фейковых" аккаунтов
-findFakesByRelations <- function(members, sample_size=10) {
+findFakesByRelations <- function(members) {
   friendlists <- getFriendsFor(members)
   
   member_ids <- names(friendlists)
@@ -50,6 +50,7 @@ checkUserByRelations <- function(member_id, friend_list, bounded=TRUE, min_rel=m
 {
   #здесь должен прогресс бар тикать
   cat("checking member ", member_id)
+  
   #Если число триад в друзьяъ пользователя меньше, чем min_triads 
   if (length(getStrongRelations(friend_list, rel_factor, bounded)) < min_rel)
   {
@@ -187,7 +188,6 @@ getFriendsOfFriends <- function(friend_list, bounded, friends_sample_size=friend
     {
       friends_of_friends <- getFriendsFor(sample(x=friend_list, size=friends_sample_size, replace=FALSE))  
     }
-    
   }
   else
   {
@@ -197,6 +197,10 @@ getFriendsOfFriends <- function(friend_list, bounded, friends_sample_size=friend
   return(friends_of_friends)
 }
 
+getUserPostDates <- function(user_id)
+{
+  
+}
 
 getStatusForUsers <- function(user_ids) {
   return(getUsersExecute(user_ids, fields='status')$status)
