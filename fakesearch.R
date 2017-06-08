@@ -13,8 +13,6 @@ smintr_global = 1000 #тестовое значение, на самом дел�
 #размер максимальной выборки друзей для проверки каждого пользователя
 friends_sample_global = 100
 
-
-
 # количество сильных связей у пользователя, который не является фейком
 min_rel_global = 1
 
@@ -43,10 +41,7 @@ findFakesByRelations <- function(members, sample_size=10) {
   
   n <- names(candidates)
   
-  #fake_list <- list.filter()
-  
   fake_list <- names(which(candidates))
-  #filtered_fake_list
   return(fake_list)
 }
 
@@ -200,4 +195,9 @@ getFriendsOfFriends <- function(friend_list, bounded, friends_sample_size=friend
   }
   
   return(friends_of_friends)
+}
+
+
+getStatusForUsers <- function(user_ids) {
+  return(getUsersExecute(user_ids, fields='status')$status)
 }
